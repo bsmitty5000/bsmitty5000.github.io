@@ -1,29 +1,45 @@
 <!DOCTYPE html>
-	<html>
-		<head>
-			<title>{{ page.title }}</title>
-			<!-- link to main stylesheet -->
-			<link rel="stylesheet" type="text/css" href="/css/main.css">
-		</head>
-		<body>
-			<nav>
-	    		<ul>
-	        		<li><a href="/">Home</a></li>
-		        	<li><a href="/about">About</a></li>
-	        		<li><a href="/cv">CV</a></li>
-	        		<li><a href="/blog">Blog</a></li>
-	    		</ul>
-			</nav>
-			<div class="container">
-			
-			{{ content }}
-			
-			</div><!-- /.container -->
-			<footer>
-	    		<ul>
-	        		<li><a href="mailto:briandsmith1@gmail.com">email</a></li>
-	        		<li><a href="https://github.com/bsmitty5000">github.com/bsmitty5000</a></li>
-				</ul>
-			</footer>
-		</body>
-	</html>
+<html>
+    <head>
+	    <title>{{ page.title }}</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <body>
+        <header>
+            <h1>Brian's Awesome Test Page</h1>
+        </header>
+        <nav>
+                <ul>
+            		<li><a href="/">Home</a></li>
+	            	<li><a href="/about">About</a></li>
+            		<li><a href="/cv">CV</a></li>
+            		<li><a href="/blog">Blog</a></li>
+                </ul>
+        </nav>
+        <div class = "cointainer">
+            <aside>
+	        		<ul>
+	            		<li><a href="#">Article 1 but it's a long ass title lets see what happens</a></li>
+		            	<li><a href="#">Article 2</a></li>
+	            		<li><a href="#">Article 3</a></li>
+	            		<li><a href="#">Article 4</a></li>
+	        		</ul>
+            </aside>
+            
+		    <div class="custom_content">
+		
+		    {{ content }}
+		
+		    </div><!-- /.container -->
+            
+        
+        
+        </div><!--- container-->
+        <footer>
+                <ul>
+                    <li><a href="mailto:briandsmith1@gmail.com">email</a></li>
+	            	<li><a href="https://github.com/bsmitty5000">github.com/bsmitty5000</a></li>
+                </ul>
+        </footer>
+    </body>
+</html>
