@@ -1,6 +1,6 @@
 name: Brian Smith, Wonderboy
 markdown: kramdown
-permalink: /:path/:basename
+permalink: /:categories/:year/:month/:day/:title/
 gems:
   - jekyll-sitemap
 url: http://bsmitty5000.github.io/
