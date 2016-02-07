@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-    	<title>{{ page.title }}</title> 
+    	<title>
+		{% if page.title %}
+			{{ page.title }}
+		{% else %}
+			Brian's Blog Page
+		{% endif %}
+    	</title>
+    	{% if page.description %}
+  		<meta name="description" content="{{ page.description}}" />
+	 % endif %}
 	<link rel="stylesheet" type="text/css" href="/css/main.css">  
     </head>
     <body>
