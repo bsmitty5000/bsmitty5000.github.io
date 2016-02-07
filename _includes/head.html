@@ -1,0 +1,18 @@
+<html>
+    <head>
+    	<title>
+		{% if page.title %}
+			{{ page.title }}
+		{% else %}
+			Brian's Blog Page
+		{% endif %}
+    	</title>
+    	{% if page.description %}
+  		<meta name="description" content="{{ page.description}}" />
+	 {% endif %}
+	<meta charset="utf-8">
+	<meta name="viewport" width="device-width, initial-scale=1.0">
+	<meta name="author" content="Brian Smith">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	{% include analytics.html %}	
+</head>
