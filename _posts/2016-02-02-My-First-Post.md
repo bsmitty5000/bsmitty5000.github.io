@@ -1,7 +1,9 @@
 ---
 layout: post
-title: "Hank Quinlan, Horrible Cop, Launches Site"
+title: "Brian Smith, Lazy Dude, Launches Site"
 date: 2014-04-30
+description: Introduction to my site
+comments: True
 ---
 
 Well. Finally got around to putting this old website together. 
