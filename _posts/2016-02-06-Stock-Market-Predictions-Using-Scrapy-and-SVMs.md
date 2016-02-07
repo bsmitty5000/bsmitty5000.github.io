@@ -6,5 +6,8 @@ description: SVM, Machine Learning, Stock Market
 comments: True
 category: ml
 ---
+#Getting data using Scrapy
+I used Scrapy to scrape data from Bloomberg archives.
 
-I tried to predict the stock market. I failed miserably.
+#Using Scikit Learn's SVM
+I used Scikit Learn's built-in SVM.
