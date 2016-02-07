@@ -3,3 +3,4 @@ markdown: kramdown
 permalink: /blog/:year/:month/:day/:title
 gems:
   - jekyll-sitemap
+url: http://bsmitty5000.github.io/
