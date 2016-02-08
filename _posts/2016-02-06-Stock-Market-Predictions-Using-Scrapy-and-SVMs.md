@@ -18,8 +18,7 @@ Francesco's post does a good job of describing how to build a web scraper using 
 
 I built my spider using the built in CrawlSpider type. Since I knew I only wanted to look at months in the year 2014, I was able to define a rule, see below, that made that part very easy.
 
-  rules = (Rule(LinkExtractor(allow=('www\.businessweek\.com\/archive\/2014-\d\d\/news\.html')),
-          callback='parse_day_tabs'),)
+  rules = (Rule(LinkExtractor(allow=('www\.businessweek\.com\/archive\/2014-\d\d\/news\.html')), callback='parse_day_tabs'),)
 
 A quick note on the Bloomerberg archive structure: Starting from the Bloomberg link above, you can get to each month for a particular year all the way back to 1991. I'm not 100% why, possibly because they don't start archiving for a set time, but there's only data starting at January 2015 and back. The links on the monthly page will take you to the actual articles. You can't see all of one particular month's articles on the first page though, there's a tab near the top for each week, and you must click through each of those tabs to get the full months list of articles.
 
