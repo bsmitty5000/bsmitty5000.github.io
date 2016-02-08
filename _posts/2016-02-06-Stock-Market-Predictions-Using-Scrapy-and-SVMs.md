@@ -2,7 +2,7 @@
 layout: post
 title: "using the news to predict the stock market"
 date: 2016-02-06
-description: SVM, Machine Learning, Stock Market, Scrapy, Python
+description: Learning how to do web scraping and machine learning
 comments: True
 category: ml
 ---
