@@ -13,6 +13,8 @@ My inspiration came from a combination of this [blog post](http://francescopoche
 
 The end results were about what you'd expect for something this basic, i.e. if you use a coin to predict if the market will go up each day, there's a 50% chance of being correct, and this project was barely able to compete with that coin. But like I said, I didn't do it to find an easy way to retirement, so I'll try my best to show what I did below.
 
+[Link to repo page] (https://github.com/bsmitty5000/market-predictor)
+
 ## getting data using Scrapy
 Francesco's post does a good job of describing how to build a web scraper using Scrapy. I also highly recommend going through the tutorial on the Scrapy site. 
 
