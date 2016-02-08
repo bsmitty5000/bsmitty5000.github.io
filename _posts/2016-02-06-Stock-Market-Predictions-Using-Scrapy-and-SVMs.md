@@ -2,7 +2,7 @@
 layout: post
 title: "Using the news to predict the Stock Market"
 date: 2016-02-06
-description: SVM, Machine Learning, Stock Market
+description: SVM, Machine Learning, Stock Market, Scrapy, Python
 comments: True
 category: ml
 ---
@@ -13,7 +13,7 @@ My inspiration came from a combination of this [blog post](http://francescopoche
 
 The end results were about what you'd expect for something this basic, i.e. if you use a coin to predict if the market will go up each day, there's a 50% chance of being correct, and this project was barely able to compete with that coin. But like I said, I didn't do it to find an easy way to retirement, so I'll try my best to show what I did below.
 
-## Getting data using Scrapy
+## getting data using Scrapy
 Francesco's post does a good job of describing how to build a web scraper using Scrapy. I also highly recommend going through the tutorial on the Scrapy site. 
 
 Before describing the spider, a quick note on the Bloomerberg archive structure: Starting from the Bloomberg link above, you can get to each month for a particular year all the way back to 1991. The links on each month's page will take you to the actual articles. You can't see all of one particular month's articles on the first page though, there's a tab near the top for each week, and you must click through each of those tabs to get the full months list of articles.
@@ -54,7 +54,7 @@ I found it incredibly useful to use Firefox's Firebug to find the necessary xpat
 
 So this was a quick walkthrough of the code. The actual directory structure and project setup is all covered in the Scrapy tutorial quite nicely. One thing that helped me a lot, since I'm completely new to xpath, web crawling, all that stuff, was the built in Scrapy shell (instructions are on the linked Scrapy tutorial above). You can quickly scrape a page and try out different xpaths to see which will work.
 
-## Using Scikit Learn's SVM
+## using scikit-learn's SVM
 Note: Below I'll describe the latest version of this project. Originally I used the actual content of the articles to feed into the SVM but switched to using the keywords.
 
 So after running the spider I had about 27 MB of text data. Francesco was again my inspiration in how to clean the data. I'm also quite new to Python, so it was quite a struggle for me to get the data into the correct data structures, e.g. it took me a while to understand Francesco's 'unlist(element)' function. In any case, the code below reads the data into a DataFrame, cleans up the date, drops any possible duplicate rows, the title and body columns, and also any rows with blank keywords:
