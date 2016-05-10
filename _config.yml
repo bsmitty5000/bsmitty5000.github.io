@@ -1,5 +1,8 @@
 name: Brian Smith, Wonderboy
 markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 permalink: /:categories/:year/:month/:day/:title/
 gems:
   - jekyll-sitemap
