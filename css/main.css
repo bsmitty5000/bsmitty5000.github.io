@@ -42,10 +42,7 @@ ul.post li {
     list-style: none;
 }
 .custom_content {
-  width: 42em;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    margin: 0 auto;
 }
 .post {
   font-size: 110%;
