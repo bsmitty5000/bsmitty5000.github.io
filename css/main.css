@@ -1,6 +1,7 @@
 nav li, footer li{
     display: inline;
     margin-right: 20px;
+  font-size: 110%;
 }
 nav {
     font-weight: bold;
