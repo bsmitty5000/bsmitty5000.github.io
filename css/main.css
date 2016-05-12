@@ -33,18 +33,18 @@ p {
 a:hover {
     text-decoration: underline;
 }
-ul.posts { 
+ul.post { 
     margin: 20px auto 40px; 
     font-size: 1.5em;
 }
 
-ul.posts li {
+ul.post li {
     list-style: none;
 }
 .custom_content {
   width: 42em;
 }
-.posts {
+.post {
   font-size: 110%;
   text-align: justify;
   margin: 3em auto 2em auto;
