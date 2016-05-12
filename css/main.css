@@ -35,9 +35,10 @@ ul.posts {
 ul.posts li {
     list-style: none;
 }
-
-.posts {
+.custom_content {
   font-size: 110%;
+}
+.posts {
   text-align: justify;
   width: 42em;
   margin: 3em auto 2em auto;
