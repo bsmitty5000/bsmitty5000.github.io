@@ -2,18 +2,6 @@ nav li, footer li{
     display: inline;
     margin-right: 20px;
 }
-aside li{
-    margin-top: 10px;
-}
-aside ul, nav ul, footer ul{
-    font-family:'Helvetica', 'Arial', 'Sans-Serif';
-    padding: 5px;
-    list-style: none;
-    font-weight: bold;
-}
-aside ul{
-    padding: 15px;
-}
 nav {
     font-weight: bold;
 }
@@ -39,15 +27,6 @@ p {
 a:hover {
     text-decoration: underline;
 }
-aside {
-    position: absolute;
-    right: 0px;
-    height: 100%;
-    float: right;
-    width: 20%;
-    
-}
-
 ul.posts { 
     margin: 20px auto 40px; 
     font-size: 1.5em;
@@ -55,4 +34,12 @@ ul.posts {
 
 ul.posts li {
     list-style: none;
+}
+
+.posts {
+  font-size: 110%;
+  text-align: justify;
+  width: 42em;
+  margin: 3em auto 2em auto;
+  line-height: 1.5em;
 }
