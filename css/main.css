@@ -8,7 +8,7 @@ nav {
 body {
   background-color: white;
   font: 13.34px helvetica, arial, clean, sans-serif;
-  *font-size: small;
+  font-size: 110%;
   text-align: center;
 }
 header {
