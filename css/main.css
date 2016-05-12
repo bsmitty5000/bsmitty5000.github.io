@@ -25,6 +25,7 @@ header {
 a {
     text-decoration: none;
     color: #999;
+  font-size: 110%;
 }
 h2 {
     font-size: 1.5em;
@@ -32,6 +33,7 @@ h2 {
 p {
     line-height: 1.4em;
     color: #333;
+  font-size: 110%;
 }
 a:hover {
     text-decoration: underline;
