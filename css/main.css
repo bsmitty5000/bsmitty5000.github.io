@@ -40,6 +40,8 @@ a:hover {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  font-size: 110%;
+  text-align: justify;
 }
 .post {
   font-size: 110%;
