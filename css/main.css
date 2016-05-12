@@ -42,11 +42,10 @@ ul.post li {
     list-style: none;
 }
 .custom_content {
-  width: 42em;
-  position: absolute;
-  margin: auto;
-  right: 0;
-  left: 0;
+  width: 200px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .post {
   font-size: 110%;
