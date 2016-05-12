@@ -43,6 +43,7 @@ ul.post li {
 }
 .custom_content {
   width: 42em;
+  float: right;
 }
 .post {
   font-size: 110%;
