@@ -21,6 +21,12 @@ nav {
 .custom_content{
     width: 80%;
 }
+body {
+  background-color: white;
+  font: 13.34px helvetica, arial, clean, sans-serif;
+  *font-size: small;
+  text-align: center;
+}
 header {
     background-color:#999;
     color:white;
