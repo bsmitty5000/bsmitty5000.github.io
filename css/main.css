@@ -50,3 +50,14 @@ ul.post li {
   margin: 3em auto 2em auto;
   line-height: 1.5em;
 }
+
+code.post {
+    border: 1px solid #ddd;
+    background-color: #eef;
+    font-size: 85%;
+    padding: 0 .2em;
+  }
+
+pre.post code.post {
+  border: none;
+}
