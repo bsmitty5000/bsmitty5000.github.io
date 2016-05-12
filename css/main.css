@@ -1,9 +1,6 @@
 nav li, footer li{
     display: inline;
-      width: 62em;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
+    margin-right: 20px;
 }
 nav {
     font-weight: bold;
@@ -18,9 +15,11 @@ header {
     background-color:#999;
     color:white;
     text-align:center;
-    padding:5px;	
-}
-footer {
+    padding:5px;
+  width: 62em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 a {
     text-decoration: none;
@@ -35,14 +34,6 @@ p {
 }
 a:hover {
     text-decoration: underline;
-}
-ul.post { 
-    margin: 20px auto 40px; 
-    font-size: 1.5em;
-}
-
-ul.post li {
-    list-style: none;
 }
 .custom_content {
   width: 62em;
