@@ -1,1 +1,62 @@
 
+nav li, footer li{
+    display: inline;
+    margin-right: 20px;
+}
+aside li{
+    margin-top: 10px;
+}
+aside ul, nav ul, footer ul{
+    font-family:'Helvetica', 'Arial', 'Sans-Serif';
+    padding: 5px;
+    list-style: none;
+    font-weight: bold;
+}
+aside ul{
+    padding: 15px;
+}
+nav {
+    font-weight: bold;
+}
+.custom_content{
+    width: 80%;
+}
+header {
+    background-color:#999;
+    color:white;
+    text-align:center;
+    padding:5px;	
+}
+footer {
+}
+a {
+    text-decoration: none;
+    color: #999;
+}
+h2 {
+    font-size: 1.5em;
+}
+p {
+    line-height: 1.4em;
+    color: #333;
+}
+a:hover {
+    text-decoration: underline;
+}
+aside {
+    position: absolute;
+    right: 0px;
+    height: 100%;
+    float: right;
+    width: 20%;
+    
+}
+
+ul.posts { 
+    margin: 20px auto 40px; 
+    font-size: 1.5em;
+}
+
+ul.posts li {
+    list-style: none;
+}
