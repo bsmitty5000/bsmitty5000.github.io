@@ -55,6 +55,7 @@ ul.post li {
 }
 
 code{
+    width: 42em;
     border: 1px solid #ddd;
     background-color: #eef;
     font-size: 85%;
