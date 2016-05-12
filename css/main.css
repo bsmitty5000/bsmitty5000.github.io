@@ -55,13 +55,8 @@ ul.post li {
 }
 pre {
     overflow: auto;
-    background-color: #eef;
 }
 code{
     border: 1px solid #ddd;
     font-size: 85%;
   }
-
-pre code{
-  border: none;
-}
