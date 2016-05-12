@@ -53,9 +53,10 @@ ul.post li {
   margin: 3em auto 2em auto;
   line-height: 1.5em;
 }
-
+pre {
+    overflow: auto;
+}
 code{
-    width: 42em;
     border: 1px solid #ddd;
     background-color: #eef;
     font-size: 85%;
