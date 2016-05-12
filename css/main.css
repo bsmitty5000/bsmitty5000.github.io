@@ -1,6 +1,9 @@
 nav li, footer li{
     display: inline;
-    margin-right: 20px;
+      width: 62em;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
 }
 nav {
     font-weight: bold;
