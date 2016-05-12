@@ -60,3 +60,7 @@ code{
     border: 1px solid #ddd;
     font-size: 85%;
   }
+pre code {
+    border: none;
+}
+}
