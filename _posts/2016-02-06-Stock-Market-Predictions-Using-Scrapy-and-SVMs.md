@@ -26,12 +26,12 @@ I used the built in CrawlSpider type. Since I knew I only wanted to look at the 
 
 The CrawlSpider, with the rule defined above, takes care of gathering all twelve links for 2014. The callback function used in the rule is the next level down, and gathers up the link associated with each tab (looking at the comments in the actual code I guess I was a bit confused when I wrote it, but there's a tab for each week, and the title for the tabs are the date range for that week):
 
-```ruby
+{% highlight python %}
 def parse_day_tabs(self, response):
   for href in response.xpath('//ul[@class="weeks"]/li/a/@href'):
     url = href.extract()
     yield scrapy.Request(url, callback=self.parse_month_links)
-```
+{% endhighlight %}
 
 The callback used in the parser above is then gathering up the article links on the current tab's page (poor naming convention here- I think this parser was made before I realized I had to go through each of the tabs, so the name really should be parse_article_links or something. If I remember I'll change in the code. If you're reading this that means I probably forgot):
 
