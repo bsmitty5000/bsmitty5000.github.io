@@ -2,7 +2,7 @@
 layout: post
 title: "communication between dsPIC33f and PC"
 date: 2016-05-14
-description: Using UART and an RT232R chip to enable PIC to PC simple communcation
+description: Using UART and an FT232R chip to enable PIC to PC simple communcation
 comments: True
 category: mbed
 ---
@@ -95,13 +95,13 @@ uart_rcvd = 1;
 uart_rcvd_char = U1RXREG;
 ```
 
-## rt232r
-I found this [breakout board](https://www.sparkfun.com/products/12731) with the RT232R chip on Sparkfun. It seems like theres much more capability than what I'm using, but if you look at the actual chip's [datasheet](https://cdn.sparkfun.com/datasheets/BreakoutBoards/DS_FT232R.pdf), I'm basically following the setup in Section 7.4 (ignoring the hardware handshaking).
+## ft232r
+I found this [breakout board](https://www.sparkfun.com/products/12731) with the FT232R chip on Sparkfun. It seems like theres much more capability than what I'm using, but if you look at the actual chip's [datasheet](https://cdn.sparkfun.com/datasheets/BreakoutBoards/DS_FT232R.pdf), I'm basically following the setup in Section 7.4 (ignoring the hardware handshaking).
 
-After setting up the PIC with the correct pins for UART functionality, you connect the UART tx pin on the PIC to the Receive Data (RXD) pin on the RT232r, and vice versa for the UART rx pin on the PIC. Don't forget to connect the Vss on the PIC to GND on RT232r as well.
+After setting up the PIC with the correct pins for UART functionality, you connect the UART tx pin on the PIC to the Receive Data (RXD) pin on the FT232r, and vice versa for the UART rx pin on the PIC. Don't forget to connect the Vss on the PIC to GND on FT232r as well.
 
 ## python script
-On the PC side I used python and the pySerial package running on a Ubuntu machine. They have some good example code [here](https://pythonhosted.org/pyserial/shortintro.html#opening-serial-ports). It's quite simple if you know how the PIC's UART is configured. The RT232R basically acts as a via that translates the UART signals from the PIC into something the computer can read, but it's still serial communication, so it is important, for example, that the baudrate in the Serial object matches what's on the PIC. Here's a snippet from my python script setting it up:
+On the PC side I used python and the pySerial package running on a Ubuntu machine. They have some good example code [here](https://pythonhosted.org/pyserial/shortintro.html#opening-serial-ports). It's quite simple if you know how the PIC's UART is configured. The FT232R basically acts as a via that translates the UART signals from the PIC into something the computer can read, but it's still serial communication, so it is important, for example, that the baudrate in the Serial object matches what's on the PIC. Here's a snippet from my python script setting it up:
 
 ```python
 ser = serial.Serial(port = '/dev/ttyUSB0', 
@@ -136,4 +136,4 @@ The bulk of this project is a demonstration of the UART capability. The main fun
 I also wanted to show how easy it is to send multiple bytes at a time, so the 'w' option in the python script will let you type in a word, up to 80 characters long, and the PIC will echo the whole word back to you.
 
 ## conclusion
-With this RT232R chip it's quite easy to establish some communication between a PIC and PC. I use this to debug different applications on the PIC and it's worked quite well for me. Thanks for reading!
+With this FT232R chip it's quite easy to establish some communication between a PIC and PC. I use this to debug different applications on the PIC and it's worked quite well for me. Thanks for reading!
