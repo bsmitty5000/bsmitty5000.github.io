@@ -15,7 +15,7 @@ By the way, I was excited to find these things on ebay for less than $2 each, an
 
 ## pic setup
 
-So you should check out my previous post on UART communincation using the dsPIC33f. I'm using the same uc in this project too (I just love the [Microstick](http://www.microchip.com/DevelopmentTools/Listing.aspx?CatID=88d053fc-5616-4075-b4d4-6fb5ee8681d3) so much). You can find that post [here](2016-05-14-Communication-between-PIC-and-PC.md) and it explains the UART setup and the Osc setup in more detail. The only change between that project and this are the pins I'm using here for the UART tx and rx.
+So you should check out my previous post on UART communincation using the dsPIC33f. I'm using the same uc in this project too (I just love the [Microstick](http://www.microchip.com/DevelopmentTools/Listing.aspx?CatID=88d053fc-5616-4075-b4d4-6fb5ee8681d3) so much). You can find that post [here](http://bsmitty5000.github.io/mbed/2016/05/14/Communication-between-PIC-and-PC/) and it explains the UART setup and the Osc setup in more detail. The only change between that project and this are the pins I'm using here for the UART tx and rx.
 
 ### hc-sr04 input/output connections
 
