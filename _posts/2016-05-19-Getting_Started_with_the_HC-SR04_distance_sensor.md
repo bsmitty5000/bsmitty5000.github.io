@@ -17,6 +17,15 @@ By the way, I was excited to find these things on ebay for less than $2 each, an
 
 So you should check out my previous post on UART communincation using the dsPIC33f. I'm using the same uc in this project too (I just love the [Microstick](http://www.microchip.com/DevelopmentTools/Listing.aspx?CatID=88d053fc-5616-4075-b4d4-6fb5ee8681d3) so much). You can find that post [here](http://bsmitty5000.github.io/mbed/2016/05/14/Communication-between-PIC-and-PC/) and it explains the UART setup and the Osc setup in more detail. The only change between that project and this are the pins I'm using here for the UART tx and rx.
 
+#### edit
+The repo is updated now, but there was an issue with changing the UART pins that didn't manifest itself until I started caring about what's happening on those pins. So when you choose what RPx pins you want to use for any of the I/O functions, you have to check to see if it's an analog input, i.e. if one of the pin functions is ANy. If so, you have to set it to a digital input, since the analog control register defaults to setting all those pins to analog. Also keep in mind that the y in ANy does not always match up to the x in RPx. Here's the snippet to set those pins to digital:
+
+```c
+ //set to digital
+ AD1PCFGLbits.PCFG4 = 1; // RP4
+ AD1PCFGLbits.PCFG5 = 1; // RP5
+```
+
 ### hc-sr04 input/output connections
 
 The first thing you'll notice if you try this setup is the HC-SR04 board runs at 5V and the PIC runs at 3.3V. Luckily, this particular PIC has a handful of 5V tolerant pins on it which allowed me to avoid having to buy any logic shifters. That means the output pin on the PIC, connected to the input pin on the sensor, needs to be configured as open-drain with a pull-up resistor to 5V. The details can be found in the I/O Ports section of the datasheet, but it's actually quite simple. All you need to do is make the pin an output (TRISx register) and set the Open-Drain register (ODCx). Code found in init.c:
