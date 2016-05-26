@@ -1,23 +1,17 @@
 ---
 layout: default
 title: not the greatest site in the world
-description: A blog about hardware programming, machine learning, and embedded development
+description: Blog documenting my home projects.
 ---
 <h1>welcome welcome</h1>
+<p>This is the website I use to document projects I work on at home. I'm very prone to working on something, getting distracted
+for a while, then forgetting everything about it when I try to go back, and this is my attemp at fixing that. Maybe someone will find something useful here as well. All source code is <a href="https://github.com/bsmitty5000">here</a>.</p>
 
-<p>The purpose of this site is to give descriptions of projects on my 
-<a href="https://github.com/bsmitty5000">github</a> account. There might be some personal stuff mixed in.</p>
+<h2>Project list</h2>
 
-<p>I'm not a web designer but hopefully the site is not too difficult to navigate.
-I got the inspiration to use github and <a href="http://jekyllrb.com/">Jekyll</a> to build this site from 
-<a href="http://jmcglone.com/guides/github-pages/">Jonathan McGlone</a>.
+  {% for post in site.posts %}
+      <p><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>:
+      {{ post.description }}</p>
+  {% endfor %}
 
-I also used this <a href="http://joshualande.com/jekyll-github-pages-poole/">site</a>
-for some help on getting comments and such setup.</p>
-
-<p>Check out the categories on the right.</p>
-
-<p>Look above for more info on me.</p>
-
-<h1>cheers!</h1>
 	
