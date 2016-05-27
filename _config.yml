@@ -7,4 +7,4 @@ permalink: /:categories/:year/:month/:day/:title/
 gems:
   - jekyll-sitemap
   - jekyll-seo-tag
-url: http://bsmitty5000.github.io/
+url: http://bsmitty5000.github.io
