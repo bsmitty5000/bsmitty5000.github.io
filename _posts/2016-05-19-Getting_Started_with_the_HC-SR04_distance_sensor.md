@@ -1,17 +1,22 @@
 ---
 layout: post
-title: "getting started with the hc-sr04 distance sensor"
+title: "interfacing a dsPIC33f and HC-SR04 ultrasonic distance sensor"
 date: 2016-05-19
-description: Simple project interfacing a dsPIC33f and the hc-sr04 distance sensor
+description: Simple project interfacing a dsPIC33f and the hc-sr04 distance sensor and sending the output to a python program on a PC through UART
 comments: True
 category: mbed
 ---
-## overview
-Alright alright alright, back at it again. This time I'm trying to wrap my head around interfacing with this cool ultra-sonic distance sensor, model number HC-SR04. It's a pretty bulky looking thing, I mean relatively speaking, with two speaker like columns coming out of the board. But the concept is cool- after getting triggered it shoots out some sound pulses and waits for the echo to come back. You can measure the distance by timing how long the output pin stays high and using the speed of sound. 
+## HC-SR04 operation
+This is an ultrasonic distance sensor ([datasheet](http://www.micropik.com/PDF/HCSR04.pdf)). The operation is simple, the input pin, called Trig on the board, is asserted for at least 10us. After release there's a short burst of ultrasonic pulses then the output pin, called Echo on the board, is held high until the sensor detects the echo of those pulses, at which time it's set back low. By timing how long the Echo pin stays high, you can use the speed of sound to calculate how far the object is that the pulses bounced off of.
 
-Anyways, I'll just dive right in to how I got things working. Here's the [link](https://github.com/bsmitty5000/getting_started_with_hc-sr04) for the repo with all the PIC source files and python script.
+## source code links
+There's some UART communication between the PIC and the python script from [this](http://bsmitty5000.github.io/mbed/2016/05/14/Communication-between-PIC-and-PC/) project.
 
-By the way, I was excited to find these things on ebay for less than $2 each, and with the cool shipping options from China I was able to get six for around $10! So much better than other distance sensors you find from supply shops around the web.
+Here's the [link](https://github.com/bsmitty5000/getting_started_with_hc-sr04) for the repo with all the PIC source files and python script.
+
+## hardware connections
+I apologize about the drawing. Gets the point across though.
+![connections](/_images/intro_hcsr04_hardware.png)
 
 ## pic setup
 
