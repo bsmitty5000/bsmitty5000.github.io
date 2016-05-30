@@ -45,3 +45,6 @@ a:hover {
   margin: 3em auto 2em auto;
   line-height: 1.5em;
 }
+img {
+    width: 62em;
+}
