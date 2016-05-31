@@ -16,7 +16,7 @@ Here's the [link](https://github.com/bsmitty5000/getting_started_with_hc-sr04) f
 
 ## hardware connections
 I apologize about the drawing. Gets the point across though.
-![connections]({{site.url}}assets/test.JPG)
+![connections]({{site.url}}assets/intro_hcsr04_hardware.jpg)
 
 ## pic setup
 
