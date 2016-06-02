@@ -6,74 +6,170 @@ description: Using UART and an FT232R chip to enable PIC to PC simple communcati
 comments: True
 category: mbed
 ---
-## overview
-This is a way to enable simple, serial communication between a PIC and PC. It can most likely be used for any PIC ucontroller that has UART, but the actual model I'm using is the dsPIC33FJ64MC802. Please see the [main page](http://www.microchip.com/wwwproducts/en/dsPIC33FJ64MC802) for example code and reference material. [Link to my example project](https://github.com/bsmitty5000/pic_to_pc_comm_uart)
+## usb to serial converter
+This project uses the FT232R chip on a Sparkfun breakout board found [here](https://www.sparkfun.com/products/12731)
 
-## pic setup
+## execution summary
+This program's purpose is simply to demonstrate communication between a PIC and PC using UART. The python script on the PC gives options for different data types for the PIC to send serially. The python script sends a flag to indicate which data type should be sent, based on user input, and the PIC responds by sending an example value. There's also a capability to send an entire string from the python script and have the PIC echo it back.
 
-### osc setup
-On the reference page for the dsPIC33f there's many example projects that show how to setup the oscillator. For this application I've configured it to run at the max speed of 40 MIPS (Fcy). The datasheet for this PIC shows the calculation and the configuration registers. Here's a snippet from init.c in the project above:
+## project source code links
+The [main page](http://www.microchip.com/wwwproducts/en/dsPIC33FJ64MC802) for this PIC model, the dsPIC33FJ64MC802, has  example code and reference material. [Link](https://github.com/bsmitty5000/pic_to_pc_comm_uart) to repo with all source code.
 
-```c
-/* 
-    Configure Oscillator to operate the device at 40Mhz
-    Fosc= Fin*M/(N1*N2), Fcy=Fosc/2
-    Fosc= 7.37*(43)/(2*2)=80Mhz for Fosc, Fcy = 40Mhz
-*/
-PLLFBD = 41; // M = 43
-CLKDIVbits.PLLPOST = 0; // N1 = 2
-CLKDIVbits.PLLPRE = 0; // N2 = 2
-```
+## hardware connections
+Sketch of the FT232R breakout board and PIC.
 
-### uart setup
+![connections]({{site.url}}assets/pic_to_pc_serial.JPG)
 
-#### pin assignment
-The tx and rx pins for the UART module can be configured to be almost any of the PIC's I/O pins. The process on how to do this is also defined in the datasheet under the I/O Ports section. Basically, the different input functions have their own register that must be loaded with the value corresponding to the pin you want to use. For example, the UART Receive function uses register RPINR18 and I'm assigning RP7 to this. For output functions, each *pin* has its own register that must be loaded with the value corresponding to the capability you want to assign to that pin. For example, I'm using RP6 as UART tx, so I load RP6's register, RPOR3 with the appropriate value. The values for the different output functions are in Table 11-2. Here's another code snippet:
+## code overview
+
+### init.c
+
+**_InitUART1_**
 
 ```c
+void InitUART1() {
+
     //Page 181 of dsPIC33FJ datasheet. This ties RP7 to UART1 RX
     RPINR18bits.U1RXR = 7;
 
     // Page 189 of dsPIC33FJ datasheet. This ties RP6 to UART1 TX
     //Table 11-2 lists the decoded values for this register pg 167
     RPOR3bits.RP6R = 3;
+
+    U1MODEbits.STSEL = 0; //1 stop bit
+    U1MODEbits.PDSEL = 0; //8 bit data, no parity
+    U1MODEbits.ABAUD = 0; //auto-baud disabled
+    U1MODEbits.BRGH = 0; //standard speed mode
+
+    //check ref manual uart section for calculation
+    if (BAUDRATE == 115200)
+        U1BRG = 20;
+    else if (BAUDRATE == 9600)
+        U1BRG = 256;
+    else
+        U1BRG = 0xFF;
+
+    //not using interrupts for transmit, polling instead
+    //U1STAbits.UTXISEL0 = 0;
+    //U1STAbits.UTXISEL1 = 0;
+    //IEC0bits.U1TXIE = 1;
+
+    //interrupt after one character is rcvd
+    U1STAbits.URXISEL = 0;
+    
+    //clear flag then enable interrupts
+    IFS0bits.U1RXIF = 0;
+    IEC0bits.U1RXIE = 1;
+
+    U1MODEbits.UARTEN = 1; //enable uart
+    U1STAbits.UTXEN = 1; //transmitter enabled
+
+    //IFS0bits.U1TXIF = 0;
+
+}
 ```
+This routine sets the rx and tx pins for the UART and configures the UART module.
+The UART rx and tx pins are mapped through the PIC's Peripheral Pin Select functionality. This functionality allows any of the RPx pins to be mapped to a handful of functions for flexibility. The input pins are mapped by assigned the RP number, eg the 7 in RP7, to the peripheral's register (UART1 Receive's register is **RPINR18**). Output pins all have their own register. Table 11-2 in the datasheet shows the numerical value assigned to each peripheral. The numerical value is then written to the desired pin's register, eg UART1 Transmit is 0b00011 which is written to RP6's register, **RPOR3**.
+Next, the procedure sets up the UART module in typical fashion. The baudrate for UART1 is determined by the value written to **U1BRG**. The calculation, found in the UART reference manual, is:
 
-#### uart config and baud rate
-In addition to setting up the UART pins, you also must configure the UART's configuration registers. the U1MODE register is the main configuration for UART1 on the dsPIC33f. Another snippet below shows how I'm setting that up. You can use almost any setup you'd like here, but the important thing is you match the settings on the other side, i.e. in this case the application talking with the PIC on the PC. The baud rate register, U1BRG, is filled with the result of the calculation found in the UART Reference Manual section from the website, Section 3.0. [Linked here for convenience](http://ww1.microchip.com/downloads/en/DeviceDoc/70000582e.pdf). This is where it's important that you setup the oscillator correctly with a known Fcy value.
-
-#### sending and receiving setup
-It's possible to setup the UART to interrupt on send and recieve, but I kept it simple and chose to just use polling when sending. This keeps the send functions easy to understand. Basically, you load the byte into the U1TXREG and poll the TRMT flag:
-
-```c	
-U1TXREG = data;
-while(U1STAbits.TRMT == 0);
 ```
+U1BRG = (Fosc / 2) / (16 * Desired BaudRate) - 1
+```
+Where in this project:
 
-This is possible because I'm in control of when I'm sending bytes and in my application I don't care if I spin inside the send routine. However, I'm not aware of when I'll be recieving so I chose to use interrupts. It is possible to poll for recieving as well, but you won't be able to do much else in your program. The code to setup the interrupt is found in init.c. There's different options for when the interrupt will trigger, found in the datasheet. I chose to interrupt after one byte:
+* Fosc has been configured to 80Mhz (Fcy = 40Mhz)
+* The desired baudrate is 115200
+
+So, the equation becomes:
+
+```
+U1BRG = (40Mhz / 2) / (16 * 115200) - 1 = 20
+```
+Interrupts are only configured for receiving, since when transmitting the program will use the polling method. There is a buffer associated with the UART module, but this program doesn't use it and interrupts after each byte is received.
+Finally, the transmitter and receiver are enabled.
+
+**_InitClock_**
 
 ```c
-//interrupt after one character is rcvd
-U1STAbits.URXISEL = 0;
+void InitClock() {
+    /* Configure Oscillator to operate the device at 40Mhz
+       Fosc= Fin*M/(N1*N2), Fcy=Fosc/2
+       Fosc= 7.37*(43)/(2*2)=80Mhz for Fosc, Fcy = 40Mhz */
+    PLLFBD = 41; // M = 43
+    CLKDIVbits.PLLPOST = 0; // N1 = 2
+    CLKDIVbits.PLLPRE = 0; // N2 = 2
+    OSCTUN = 0;
+    RCONbits.SWDTEN = 0;
 
-//clear flag then enable interrupts
-IFS0bits.U1RXIF = 0;
-IEC0bits.U1RXIE = 1;
+    // Clock switch to incorporate PLL
+    __builtin_write_OSCCONH(0x01); // Initiate Clock Switch to
+    // FRC with PLL (NOSC=0b001)
+    __builtin_write_OSCCONL(0x01); // Start clock switching
+    while (OSCCONbits.COSC != 0b001); // Wait for Clock switch to occur
 
-U1MODEbits.UARTEN = 1; //enable uart
-U1STAbits.UTXEN = 1; //transmitter enabled
+    while (OSCCONbits.LOCK != 1) {
+    };
+}
 ```
+The oscillator is setup to use the internal crystal through configuration macros in the main.c file. This procedure proceeds to configure the value of Fosc to a frequency of 80Mhz. The calculation for this, found in the  Oscillator Configuration section of the datasheet, is:
 
-### sending and recieving routines
+```
+Fosc = Fin * [M / (N1 * N2)]
+```
+Where,
 
-#### sending
-Like I showed above, the send routines are quite basic. The only interesting part of the send routines is sending floating point values. For that I used the union data structure in C. Unions are quite interesting and if you haven't used them before check [this](http://www.tutorialspoint.com/cprogramming/c_unions.htm) out. With this data structure, I can separate out all the bytes associated with the floating point values and send them one by one:
+* Fin is the internal osc frequency, 7.37Mhz
+* M is set to 43 by assigning **PLLFBD** to 41 (see datasheet, but **PLLFBD** register contains **PLLDIV**, which = M - 2
+* N1 & N2 are set to 2 by assigning **PLLPOST** and **PLLPRE** to 0, respectively (again, see datasheet, but **PLLPOST** and **PLLPRE** are both = Nx - 2)
+
+So, finally the equation works out to confirm Fosc = 80Mhz:
+
+```
+Fosc = 7.37Mhz * [43 / (2 * 2)] = 79 Mhz ~= 80Mhz
+```
+The remainder of the procedure waits until the PLL circuit has finished settling. I actually found this code in one of the application examples on the PIC's website and don't understand all the details.
+
+### uart.c
+
+**_send_**
 
 ```c
+void send(unsigned char data)
+{
+	U1TXREG = data;
+	while(U1STAbits.TRMT == 0);
+}
+```
+Basic send routine that transmits one byte. The polling method is used here because it's easy. the **TRMT** bit is asserted when the transmit shift register is empty. The downside to this method is one byte is sent at a time, ie multiple bytes are sent individually. The upside is simplicity.
+
+**_sendShort_**
+
+```c
+void sendShort(unsigned short data)
+{
+	unsigned char temp;
+
+        //sending lsb first
+	temp = data;
+	U1TXREG = temp;
+	while(U1STAbits.TRMT == 0);
+	temp = data >> 8;
+	U1TXREG = temp;
+	while(U1STAbits.TRMT == 0);
+	
+}
+```
+This routine sends two bytes, with the order sending the least significant byte first. This matches the endian on my machine. Like mentioned above, the polling method means bytes aren't sent back-to-back, but individually.
+
+**_sendDouble_**
+
+```c
+void sendDouble(double data)
+{
 	union convUnion myUnion;
-	myUnion.f = data;
+	myUnion.d = data;
 
-	U1TXREG = myUnion.bytes[0];
+    U1TXREG = myUnion.bytes[0];
 	while(U1STAbits.TRMT == 0);
 	U1TXREG = myUnion.bytes[1];
 	while(U1STAbits.TRMT == 0);
@@ -81,59 +177,265 @@ Like I showed above, the send routines are quite basic. The only interesting par
 	while(U1STAbits.TRMT == 0);
 	U1TXREG = myUnion.bytes[3];
 	while(U1STAbits.TRMT == 0);
+	
+}
 ```
-
-#### receiving
-Like I showed above, I'm using interrupts to receive. But it's still pretty basic, since I know the interrupt fires after one byte. I used a global flag to let my main program know something's arrived and store the recieved byte into a global char. Don't forget to clear the IF. Here's the code found in my interrupt routine:
+This routine sends a 4-byte floating point. To do this, a union type is used so the individual bytes of the floating point variable can be accessed. The union definition, found in **_uart.h_** is:
 
 ```c
-// Clear interrupt flag
-IFS0bits.U1RXIF = 0;
-//let the main loop know we received a char
-uart_rcvd = 1;
-//load the char
-uart_rcvd_char = U1RXREG;
+union convUnion
+{
+	double d;
+	float f;
+	unsigned char bytes[4];
+};
+```
+So both floats and doubles can be used with this. Each of the bytes are accesible through their index. Again, the order of sending jives with the endian of my machine (basically found through trial & error, I'm not smart enough to figure it out ahead of time).
+
+**_sendFloat_**
+Exact same code as **_sendDouble_**, just the input parameter is set for **float** type.
+
+### main.c
+
+```c
+//main.c
+#include "init.h"
+#include "uart.h"
+#include <math.h>
+
+// ******************************************************************************************* //
+// Configuration bits for CONFIG1 settings. 
+//
+// Make sure "Configuration Bits set in code." option is checked in MPLAB.
+// This option can be set by selecting "Configuration Bits..." under the Configure
+// menu in MPLAB.
+
+_FOSC(OSCIOFNC_ON & FCKSM_CSDCMD & POSCMD_NONE);	//Oscillator Configuration (clock switching: disabled;
+							// failsafe clock monitor: disabled; OSC2 pin function: digital IO;
+							// primary oscillator mode: disabled)
+_FOSCSEL(FNOSC_FRCPLL);					//Oscillator Selection PLL
+_FWDT(FWDTEN_OFF);					//Turn off WatchDog Timer
+_FGS(GCP_OFF);						//Turn off code protect
+_FPOR(FPWRT_PWR1);					//Turn off power up timer
+
+//holds the char sent
+volatile char uart_rcvd_char;
+//flag indicating char has been rcvd
+volatile char uart_rcvd;
+
+//stores the word
+volatile char word_rcvd[80];
+//starts putting the rcvd chars into the word
+volatile char word_mode;
+
+
+int main()
+{
+
+    //initialize everything
+    uart_rcvd_char = 0;
+    uart_rcvd = 0;
+
+    word_mode = 0;
+    int word_length = 0;
+    int i;
+
+    InitClock();
+    InitUART1();
+
+    while(1) {
+
+        if (uart_rcvd == 1) {
+
+            //word mode fills up the string then sends when a newline comes
+            if (word_mode == 1) {
+
+                //word is done, now send it and restart
+                if(uart_rcvd_char == '\n') {
+                    for (i = 0; i < word_length; i++) {
+                        send(word_rcvd[i]);
+                    }
+                    word_length = 0;
+                    word_mode = 0;
+                }
+                //just keep filling up the word
+                else {
+                    word_rcvd[word_length] = uart_rcvd_char;
+                    word_length++;
+                }
+            }
+            else {
+                //test sendFloat
+                if (uart_rcvd_char == 'f') {
+                    sendFloat(3.1415);
+                }
+                //test sendDouble
+                else if (uart_rcvd_char == 'd') {
+                    sendDouble(1.618);
+                }
+                //test sendShort
+                else if (uart_rcvd_char == 's') {
+                    sendShort(42);
+                }
+                //test send
+                else if(uart_rcvd_char == 'c') {
+                    send('a');
+                }
+                //start up word mode
+                else if(uart_rcvd_char == 'w') {
+                    word_mode = 1;
+                }
+            }
+
+            //reset flag
+            uart_rcvd = 0;
+        }
+    }
+
+    return 1;
+}
 ```
 
-## ft232r
-I found this [breakout board](https://www.sparkfun.com/products/12731) with the FT232R chip on Sparkfun. It seems like theres much more capability than what I'm using, but if you look at the actual chip's [datasheet](https://cdn.sparkfun.com/datasheets/BreakoutBoards/DS_FT232R.pdf), I'm basically following the setup in Section 7.4 (ignoring the hardware handshaking).
+**_global variables_**
+**uart_rcvd_char**: used to store the byte of data sent by the PC serially. Set in the UART Receive interrupt
+**uart_rcvd**: flag to signal a byte has arrived over UART, set in the UART revieve interrupt
+**word_rcvd[80]**: used when the python script indicates a word will be sent over UART. The PIC stores each char, up to a limit of 80, and then echos the word back to the python script
+**word_mode**: flag used to indicate if a word is being sent, so the program knows to store each byte received until a newline character is received indicating the end of the word
 
-After setting up the PIC with the correct pins for UART functionality, you connect the UART tx pin on the PIC to the Receive Data (RXD) pin on the FT232r, and vice versa for the UART rx pin on the PIC. Don't forget to connect the Vss on the PIC to GND on FT232r as well.
+**_local variables_**
+**word_length**: counter used to count how many characters have been sent in the string. Used when echoing the string back to the PC
+**i**: loop counter
 
-## python script
-On the PC side I used python and the pySerial package running on a Ubuntu machine. They have some good example code [here](https://pythonhosted.org/pyserial/shortintro.html#opening-serial-ports). It's quite simple if you know how the PIC's UART is configured. The FT232R basically acts as a via that translates the UART signals from the PIC into something the computer can read, but it's still serial communication, so it is important, for example, that the baudrate in the Serial object matches what's on the PIC. Here's a snippet from my python script setting it up:
+**_main_**
+The main routine initializes the global variables and instantiates the local variables, and calls the init routines to setup the Osc and UART module.
+The main loop then waits for a byte to come over the UART, the value of which determines the next actions. There's an option for the following data types:
+
+* float
+* double
+* short
+* char
+
+When one of these options comes from the PC, the PIC responds by sending an example variable back. The values of these examples are hardcoded since this is just a demo.
+There's also a char that indicates a word will be coming from the PC. When this char is received the PIC asserts the **word_mode** flag and will store all incoming chars in the **word_rcvd** char array until a new line character is received. It then will echo back the entire word.
+It continually stays in this loop waiting for input from the PC.
+
+**_ _U1RXInterrupt_**
+
+```c
+void __attribute__((__interrupt__, no_auto_psv)) _U1RXInterrupt(void)
+{
+
+	// Clear interrupt flag
+	IFS0bits.U1RXIF = 0;
+    //let the main loop know we received a char
+    uart_rcvd = 1;
+    //load the char
+    uart_rcvd_char = U1RXREG;
+}
+```
+The interrupt routine for UART1 receive. It clears the interrupt flag and sets the **uart_rcvd** global flag so the main loop knows a character has been received. It stores the actual value, set automatically by the UART logic in register **U1RXREG** in the global variable, **uart_rcvd_char** for the main loop to read.
+
+### uart_dspic33f.py
 
 ```python
+# -*- coding: utf-8 -*-
+"""
+Testing out UART on dsPIC33f
+"""
+import serial
+import struct    
+
 ser = serial.Serial(port = '/dev/ttyUSB0', 
                     baudrate = 115200,
                     bytesize = 8,
                     parity = serial.PARITY_NONE,
                     stopbits = 1,
                     timeout = 3)
+
+op = 'x'
+rcvd = 'x'
+
+def send_word():
+    print(' ')
+    print(' ')
+    print('Type in a word. Must be less than 80 characters.')
+    print('The stop tx char will automatically be inserted.')
+    
+    word_length = 81
+    while word_length > 80:
+        word_2_send = raw_input('Enter string (< 80 char): ')
+        word_length = len(word_2_send)
+    
+    ser.write(word_2_send)
+    #using new line to tell the PIC we're done
+    ser.write('\n')
+    
+    rcvd = ser.read(len(word_2_send))
+    
+    print(' ')
+    print(' ')
+    print('Echo from PIC: ')
+    print(rcvd)
+
+def print_options():
+    print(' ')
+    print(' ')
+    print('q - quit')
+    print('f - test float')
+    print('d - test double')
+    print('s - test short')
+    print('c - test char')
+    print('w - send word')
+
+
+while op != 'q':
+    
+    print_options()
+    op = raw_input('Enter choice: ')
+    if op != 'q':
+        ser.write(op)
+    if op == 'f' or op == 'd':
+        rcvd = ser.read(4)
+        rcvd = struct.unpack('f', rcvd)
+        print(rcvd)
+    elif op == 's':
+        rcvd = ser.read(2)
+        rcvd = struct.unpack('H', rcvd)
+        print(rcvd)
+    elif op == 'c':
+        rcvd = ser.read()
+        print(rcvd)
+    elif op == 'w':
+        send_word()
+    
+print('Thanks for playing!')
+ser.close()
 ```
 
+**_global variables_**
+**ser**: serial object, configured to match the UART configuration on the PIC
+**op**: character used to store the user input from the keyboard
+**rcvd**: character used to store the input from the PIC
+
+**_send_word_**
+This function gets called when the word option is requested. It asks for a string to be typed in and does perform a check to make sure it's less than 80 characters. After sending the string the function sends the new-line flag to signal the PIC the word has completed. It then sits and waits for the PIC to echo back the string and prints the word.
+
+**_print_options_**
+Just a helper function to print out the available options.
+
+**_main_**
+This loop continues until the option to quit is selected. For each of the data types, the appropriate number of bytes to wait for from the PIC is hardcoded.
+Note: the short and float/double type require the bytes to be unpacked into the appropriate python datatype. The documentation for the struct package can be found [here](https://docs.python.org/2/library/struct.html)
+pySerial package documentation can be found [here](https://pythonhosted.org/pyserial/shortintro.html#opening-serial-ports).
+
 ### ttyUSBx issues
-Now your port may be different than what's here. The way I figure out which port is using this command line tool below:
+The port the FT232R shows up on can change. I don't have an automatic way of figuring this out, only by the python script erroring out when trying to instantiate the serial object because that particular ttyUSBx doesn't exist. On Linux, this command will help determine which port to use:
 
 ```
 dmesg | grep tty
 ```
 
-You may also run into permission issues. I found [this](http://askubuntu.com/questions/58119/changing-permissions-on-serial-port) discussion on ask ubuntu to be quite helpful.
-
-### decomming the floating point bytes
-To rebuild the floating points from bytes I used the [struct python package](https://docs.python.org/2/library/struct.html). The documentation is pretty good. Here's yet another code snippet from the project:
-
-```python
-if op == 'f' or op == 'd':
-    rcvd = ser.read(4)
-    rcvd = struct.unpack('f', rcvd)
-```
-
-## project description
-The bulk of this project is a demonstration of the UART capability. The main function running on the PIC waits for certain flag chars sent by the Python script. For numerical demonstration I've simply loaded constant values that will be sent back to the PC after the correct flag is sent. For example, to send a floating point from the PIC you type in 'f' at the prompt from the python script. 
-
-I also wanted to show how easy it is to send multiple bytes at a time, so the 'w' option in the python script will let you type in a word, up to 80 characters long, and the PIC will echo the whole word back to you.
+If there's still an issue with reading, it could be permission issues. [This](http://askubuntu.com/questions/58119/changing-permissions-on-serial-port) discussion on ask ubuntu was helpful.
 
 ## conclusion
 With this FT232R chip it's quite easy to establish some communication between a PIC and PC. I use this to debug different applications on the PIC and it's worked quite well for me. Thanks for reading!
