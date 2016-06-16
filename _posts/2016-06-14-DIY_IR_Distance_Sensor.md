@@ -34,6 +34,11 @@ It's important to note that the negative pin of the wallwart is tied to the AVss
 
 To communicate with the computer I'm using the same FT232R breakout board, in red, as seen in previous posts.
 
+
+Actual setup, with divider to block the radiant LED light from the photodiode:
+
+![actual]({{site.url}}assets/diy_IR_distance_sensor_actual_hardware.JPG)
+
 ## execution summary
 My goal with this little project was to graph the output of the sensor to compare to other analog IR distance sensors, like [this](https://www.pololu.com/product/136/pictures) sensor on Pololu (you can see the output graph in the middle of the page), to make sure what I have seems reasonable. So to do this, the python program, running on the PC, asks the user for the current distance from the sensor the object is. It then sends a flag to the PIC that indicates it's time to sample the ADC pin, the PIC sends the raw ADC value back to the PC, and the python script records the distance and ADC value. This loops until the user enters the quit button and the python script graphs the values.
 
@@ -247,7 +252,7 @@ The jist of this program is setting up the x and y arrays to store the distance 
 
 Once a 'q' comes, the loop exits and the graph prints out.
 
-Here's a few examples of output.
+### results
 
 #### white paper
 Apologies for the poor graphs. X axis is in cm and Y axis is in raw ADC counts.
