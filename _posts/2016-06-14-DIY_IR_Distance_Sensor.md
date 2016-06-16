@@ -35,7 +35,8 @@ It's important to note that the negative pin of the wallwart is tied to the AVss
 To communicate with the computer I'm using the same FT232R breakout board, in red, as seen in previous posts.
 
 
-Actual setup, with divider to block the radiant LED light from the photodiode:
+#### Actual setup
+I made a quick and dirty screen to block incoming LED light from the side of the photodiode. In this picture, the photodiode on the left and the LED on the right, of the divider.
 
 ![actual]({{site.url}}assets/diy_IR_distance_sensor_actual_hardware.JPG)
 
