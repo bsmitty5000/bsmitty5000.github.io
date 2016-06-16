@@ -300,6 +300,7 @@ int main()
 **_global variables_**
 
 **uart_rcvd_char**: used to store the byte of data sent by the PC serially. Set in the UART Receive interrupt
+
 **uart_rcvd**: flag to signal a byte has arrived over UART, set in the UART revieve interrupt
 **word_rcvd[80]**: used when the python script indicates a word will be sent over UART. The PIC stores each char, up to a limit of 80, and then echos the word back to the python script
 **word_mode**: flag used to indicate if a word is being sent, so the program knows to store each byte received until a newline character is received indicating the end of the word
