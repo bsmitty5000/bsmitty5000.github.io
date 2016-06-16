@@ -193,6 +193,7 @@ union convUnion
 So both floats and doubles can be used with this. Each of the bytes are accesible through their index. Again, the order of sending jives with the endian of my machine (basically found through trial & error, I'm not smart enough to figure it out ahead of time).
 
 **_sendFloat_**
+
 Exact same code as **_sendDouble_**, just the input parameter is set for **float** type.
 
 ### main.c
@@ -297,6 +298,7 @@ int main()
 ```
 
 **_global variables_**
+
 **uart_rcvd_char**: used to store the byte of data sent by the PC serially. Set in the UART Receive interrupt
 **uart_rcvd**: flag to signal a byte has arrived over UART, set in the UART revieve interrupt
 **word_rcvd[80]**: used when the python script indicates a word will be sent over UART. The PIC stores each char, up to a limit of 80, and then echos the word back to the python script
