@@ -350,17 +350,27 @@ int main()
 ```
 
 **_global variables_**
+
 **uart_rcvd_char**: used to store the byte of data sent by the PC serially (is unused at this point and could be deleted)
+
 **uart_rcvd**: flag to signal a byte has arrived over UART. Set in UART's interrupt routine
+
 **falling_edge_rcvd**: flag used to signal the falling edge of Echo has been recieved. Required since rising & falling edges will trigger an IC1 interrupt, and the main loop only needs to know when the falling edge has come
+
 **rising_edge**: flag used in IC1's interrupt routine, again because the interrupt will be called for both rising and falling. Initialized to 1 since the first edge ever seen must be rising (if the sensor behaves)
+
 **rising_time, falling_time**: used to store the value of the IC1 buffer, stored in **IC1BUF** automatically through Input Capture logic, that holds the Timer2 count values. The difference between the two will be the length of time, in Timer2 counts, that Echo was asserted.
+
 **new_frame_start**: flag used to signal the start of a new frame. Set in Timer1's interrupt routine.
+
 **timer_counts**: stores the difference in raw Timer2 counts between the rising and falling edge of Echo pin
+
 **period_us**: stores the time, in microseconds, between the rising and falling edge of Echo pin (logic commented out now, could be deleted)
+
 **distance**: final calculated distance of the sensed object in centimeters
 
 **_main_**
+
 The main program starts by initializing the global variables and calling the init procedures.
 It then waits for a signal from the PC, sent by the python script, before entering the main loop.
 In the main loop, the **new_frame_start** is initialized to zero. This will be asserted in Timer1's interrupt to signify time for a new frame.

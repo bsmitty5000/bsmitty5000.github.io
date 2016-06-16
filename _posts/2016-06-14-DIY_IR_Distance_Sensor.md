@@ -169,11 +169,15 @@ int main()
 ```
 
 **_global variables_**
+
 **uart_rcvd_char**: used to store the byte of data sent by the PC serially (is unused at this point and could be deleted)
+
 **uart_rcvd**: flag to signal a byte has arrived over UART. Set in UART's interrupt routine
+
 **raw_sample**: gets assigned the return value of sample_adc and then is passed into sendShort
 
 **_main_**
+
 The main program starts by initializing the global variables and calling the init procedures.
 After this the code is quite simple. It sits in the main while loop waiting for a char to come over the UART from the PC. Once this happens, it samples the ADC and sends the value back over the UART. The program never quits which allows the python script on the computer to be run multiple times without needed to reset the PIC.
 
