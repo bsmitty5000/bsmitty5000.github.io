@@ -19,4 +19,11 @@ The PIC is the [dsPIC33f](http://www.microchip.com/wwwproducts/en/dsPIC33FJ64MC8
 
 ![connections]({{site.url}}assets/si4432_test/si4432_test.JPG)
 
+## //todo
+
+* overview of the si4432 setup
+* SPI setup on PIC
+* limitations of using the logic converter on the SPI speed
+* main loop code overview for PIC and Arduino
+
 
