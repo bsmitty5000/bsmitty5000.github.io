@@ -21,7 +21,7 @@ The PIC is the [dsPIC33f](http://www.microchip.com/wwwproducts/en/dsPIC33FJ64MC8
 
 ![connections]({{site.url}}assets/si4432_test/si4432_test.JPG)
 
-Fancy drawing showing how the two microcontrollers connect to the si4432 chip. 
+Fancy drawing showing how the two microcontrollers connect to the si4432 chip. ***Pretty glaring omission I noticed later: Pin 11 on the si4432, SDN, should be tied to ground. It's easy since they're right next to each other. This keeps the si4432 out of shutdown mode. If you want to use shutdown mode, you'll have to connect that to a digital pin*** 
 
 The PIC doesn't have a Vout pin so I used the 3.3V pin from the FT232R chip, since I had that connected initially anyways when debugging the SPI so the PIC could talk to the PC. Other than that though, the PIC didn't need any other help connecting since its logic level is already 3.3V.
 
