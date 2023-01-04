@@ -115,7 +115,12 @@ function formatResults()
 {
   var resultStr = "";
   for (let i = 0; i < outcomeHistory.length; i++) {
-      resultStr += "Strategy " + i + ": " + outcomeHistory[i] + "\n";
+      resultStr += "Strategy " + i + ": ";
+      for(let j = 0; j < 3; j++)
+      {
+        resultStr += Number.parseFloat(outcomeHistory[i][j] * 100).toFixed(2) + ", ";
+      }
+      resultStr += "\n";
   }
   // for (let i = 0; i < playerHistory.length; i++) {
   //   resultStr +=  playerHistory[i] + ": " + computerHistory[i] + "\n";
