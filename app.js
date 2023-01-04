@@ -117,9 +117,9 @@ function formatResults()
   for (let i = 0; i < outcomeHistory.length; i++) {
       resultStr += "Strategy " + i + ": " + outcomeHistory[i] + "\n";
   }
-  for (let i = 0; i < playerHistory.length; i++) {
-    resultStr +=  playerHistory[i] + ": " + computerHistory[i] + "\n";
-  }
+  // for (let i = 0; i < playerHistory.length; i++) {
+  //   resultStr +=  playerHistory[i] + ": " + computerHistory[i] + "\n";
+  // }
   return resultStr;
 }
 
