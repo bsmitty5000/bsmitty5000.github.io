@@ -103,7 +103,7 @@ btns.forEach(function (btn) {
     if(turnCount >= maxTurns)
     {
       outcomeHistory.push([playerWin/turnsPerStrategy*1.0, computerWin/turnsPerStrategy*1.0, (turnsPerStrategy-playerWin-computerWin)/turnsPerStrategy*1.0]);
-      message.textContent = "Thank you! Please copy & paste the text below and send to Tyler: briandsmith1@gmail.com";
+      message.textContent = "Thank you! Please screenshot and send results below.";
       endGame = true;
       results.textContent = formatResults();
       results.style.visibility = "visible";
