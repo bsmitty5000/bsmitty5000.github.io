@@ -233,7 +233,7 @@ main {
   background: var(--clr-black);
 }
 
-#outcome, #turnCounter {
+#turnCounter {
   font-size: 0.875rem;
   font-weight: bold;
 }
